@@ -21,11 +21,12 @@ else:
                     try:
                         data = json.load(f)
                         for record in data.get('Records', []):
-                            user = record.get('userIdentity', {}).get('arn', 'UnknownUser')
-                            event = record.get('eventName', 'UnknownEvent')
-                            source = record.get('eventSource', 'UnknownSource')
-                            
-                            summary = f"User {user} performed {event} on {source}"
+                            user = record.get('userIdentity', {}).get('arn', 'Unknown')
+                            event = record.get('eventName', 'Unknown')
+                            error = record.get('errorCode', 'Success') # Crucial for reliability
+                            ip = record.get('sourceIPAddress', 'UnkownIP')
+                            ua = record.get('userAgent', 'UknownAgent')
+                            summary = f"User {user} attempted {event}. Status: {error}. Source: {ip}. Tool {ua}"
                             all_events.append({"summary": summary, "raw": record})
                     except Exception as e:
                         print(f"Skipping broken file {file}: {e}")
